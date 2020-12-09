@@ -41,8 +41,6 @@ def run_inference_for_single_image(model, image):
 	
 	# Handle models with masks:
 	if 'detection_masks' in output_dict:
-		# Reframe the the bbox mask to the image size.
-		# patch tf1 into `utils.ops`
 		utils_ops.tf = tf.compat.v1
 		detection_masks_reframed = utils_ops.reframe_box_masks_to_image_masks(
 				tf.convert_to_tensor(output_dict["detection_masks"]),
@@ -53,8 +51,7 @@ def run_inference_for_single_image(model, image):
 	return output_dict
 
 def show_inference(model, image_path, count):
-	# List of the strings that is used to add correct label for each box.
-	PATH_TO_LABELS = 'object_detection/mscoco_label_map.pbtxt'
+	PATH_TO_LABELS = 'object_detection/mscoco_label_map.pbtxt' # list of classes to classify
 	category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
 	image_np = np.array(Image.open(image_path))
 	output_dict = run_inference_for_single_image(model, image_np)
@@ -69,24 +66,15 @@ def show_inference(model, image_path, count):
 		line_thickness=8)
 	img = Image.fromarray(image_np)
 	return img
-	# img.save("saved_image" + str(count) + ".jpg")
-	# display(Image.fromarray(image_np))
 
 def run():
 	tf.gfile = tf.io.gfile
 	detection_model = load_model("ssd_mobilenet_v1_coco_2017_11_17") # run model by model name
 	count = 0
-	# TEST Images
-	PATH_TO_TEST_IMAGES_DIR = pathlib.Path('uploads')
+	PATH_TO_TEST_IMAGES_DIR = pathlib.Path('uploads') # TEST Images
 	TEST_IMAGE_PATHS = list(pathlib.Path("uploads").glob("*.jpg"))
-	# TEST_IMAGE_PATHS = sorted(list(PATH_TO_TEST_IMAGES_DIR.glob("*.jpg")))
 	detected_image = show_inference(detection_model, TEST_IMAGE_PATHS[0], count)
 	return detected_image
-	# for image_path in TEST_IMAGE_PATHS:
-	# 	show_inference(detection_model, image_path, count)
-	# 	count += 1
-
-
 
 # model_name = "mask_rcnn_inception_resnet_v2_atrous_coco_2018_01_28"
 # masking_model = load_model(model_name)
