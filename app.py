@@ -9,6 +9,7 @@ import os
 from flask import Flask, flash, request, redirect, render_template
 from werkzeug.utils import secure_filename
 import object_detector_copy
+import random
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 
@@ -26,13 +27,11 @@ NOTAFICATION_MESSAGE = ""
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/')
-def upload_form():
-    return render_template('upload.html')
 
-
-@app.route('/', methods=['POST'])
+@app.route('/', methods=["GET", "POST"])
 def upload_file():
+    if request.method == "GET":
+        return render_template("upload.html")
     if request.method == 'POST':
         file = request.files['file']
         if file.filename == '':
@@ -42,14 +41,9 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             img = object_detector_copy.run()
-            img.save("static/detected_image.jpg")
-            flash('File successfully uploaded')
-            return redirect("/detected")
+            random_number = random.randint(1, 100)
+            img.save("static/detected_image" + str(random_number) + ".jpg")
+            return render_template("detected.html", location="static/detected_image" + str(random_number) + ".jpg")
         else:
             NOTAFICATION_MESSAGE = "The only allowed file type so far is jpg. Please choose another photo."
             return render_template("failure.html", message=NOTAFICATION_MESSAGE)
-
-@app.route("/detected")
-def detected():
-    location = "static/detected_image.jpg"
-    return render_template("detected.html", location=location)
