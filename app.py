@@ -2,13 +2,13 @@
 OBJECT DETECTION WEB APPLICATION
 
 CREATED BY HAYK STEPANYAN
-LAST EDIT: DECEMBER 8, 2020
+LAST EDIT: DECEMBER 9, 2020
 """
 
 import os
 from flask import Flask, flash, request, redirect, render_template
 from werkzeug.utils import secure_filename
-import object_detector_copy
+import object_detector
 import random
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
@@ -26,10 +26,15 @@ ALLOWED_EXTENSIONS = set(["jpg"])
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def remove_dir_files(directory):
+    for file_name in os.listdir(directory):
+        os.remove(os.path.join(directory, file_name))
+
 
 @app.route('/', methods=["GET", "POST"])
 def upload_file():
     if request.method == "GET":
+        remove_dir_files("static")
         return render_template("upload.html")
     if request.method == 'POST':
         file = request.files['file']
@@ -39,9 +44,10 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            img = object_detector_copy.run()
+            img = object_detector.run()
             random_number = random.randint(1, 100)
             img.save("static/detected_image" + str(random_number) + ".jpg")
+            remove_dir_files(UPLOAD_FOLDER)
             return render_template("detected.html", location="static/detected_image" + str(random_number) + ".jpg")
         else:
             NOTAFICATION_MESSAGE = "The only allowed file type so far is jpg. Please choose another photo."
