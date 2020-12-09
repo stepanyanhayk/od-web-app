@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Python Flask Multiple Files Upload Example</title>
+        <title>Object Detection</title>
     </head>
     <body>
         <h2>Select a photo to upload</h2>
         <p>
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul class=flashes>
-                {% for message in messages %}
+            <ul>
                 <li>{{ message }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-            {% endwith %}
+            </ul>
         </p>
         <form method="post" action="/" enctype="multipart/form-data">
             <dl>

@@ -21,6 +21,7 @@ app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = set(["jpg"])
+NOTAFICATION_MESSAGE = ""
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -45,8 +46,8 @@ def upload_file():
             flash('File successfully uploaded')
             return redirect("/detected")
         else:
-            flash('Allowed file type so far is only jpg')
-            return redirect(request.url)
+            NOTAFICATION_MESSAGE = "The only allowed file type so far is jpg. Please choose another photo."
+            return render_template("failure.html", message=NOTAFICATION_MESSAGE)
 
 @app.route("/detected")
 def detected():
