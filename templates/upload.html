@@ -1,19 +1,17 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Object Detection</title>
-    </head>
-    <body>
-        <h2>Select a photo to upload</h2>
-        <form method="post" action="/" enctype="multipart/form-data">
-            <dl>
-                <p>
-                    <input type="file" name="file" autocomplete="off" required>
-                </p>
-            </dl>
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <h2>Select a photo to upload</h2>
+    <form method="post" action="/" enctype="multipart/form-data">
+        <dl>
             <p>
-                <input type="submit" value="Submit">
+                <input type="file" name="file" autocomplete="off" required>
             </p>
-        </form>
-    </body>
-</html>
+        </dl>
+        <p>
+            <input type="submit" value="Submit">
+        </p>
+    </form>
+
+{% endblock %}
