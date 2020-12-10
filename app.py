@@ -10,7 +10,7 @@ from flask import Flask, flash, request, redirect, render_template, Response
 from werkzeug.utils import secure_filename
 import object_detector
 import random
-import camera_utils
+import camera_object_detector
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 
@@ -54,4 +54,4 @@ def upload_file():
 
 @app.route("/video_feed")
 def video_feed():
-    return Response(camera_utils.gen(), mimetype="multipart/x-mixed-replace; boundary=frame")
+    return Response(camera_object_detector.gen(), mimetype="multipart/x-mixed-replace; boundary=frame")
