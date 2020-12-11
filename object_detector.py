@@ -21,7 +21,7 @@ from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
 def load_model(model_name):
-	model = tf.saved_model.load("saved_models/")
+	model = tf.saved_model.load("saved_models/" + model_name + "/image")
 	return model
 
 def run_inference_for_single_image(model, image):

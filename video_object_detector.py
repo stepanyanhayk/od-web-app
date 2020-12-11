@@ -17,8 +17,7 @@ from PIL import Image
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
-# PATH_TO_CKPT = "ssd_mobilenet_v1_coco_11_06_2017/saved_model.pb" # frozen_inference_graph
-PATH_TO_CKPT = "ssd_mobilenet_v1_coco_2017_11_17/frozen_inference_graph.pb"
+PATH_TO_CKPT = "saved_models/ssd_mobilenet_v1_coco_2017_11_17/video/frozen_inference_graph.pb"
 PATH_TO_LABELS = os.path.join("object_detection", "mscoco_label_map.pbtxt")
 NUM_CLASSES = 90
 
@@ -41,8 +40,8 @@ def load_image_into_numpy_array(image):
 
 IMAGE_SIZE = (12, 8)
 
-def gen():
-    cap = cv2.VideoCapture("video2.mp4")
+def gen(video):
+    cap = cv2.VideoCapture(video)
     with detection_graph.as_default():
         with tf.compat.v1.Session(graph=detection_graph) as sess:
             while True:

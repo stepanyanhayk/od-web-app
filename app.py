@@ -10,7 +10,7 @@ from flask import Flask, flash, request, redirect, render_template, Response
 from werkzeug.utils import secure_filename
 import object_detector
 import random
-import camera_object_detector
+import video_object_detector
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 
@@ -22,24 +22,24 @@ app.secret_key = "secret key"
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-ALLOWED_EXTENSIONS = set(["jpg"])
+IMAGE_ALLOWED_EXTENSIONS = set(["jpg"])
 
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+def allowed_file(filename, allowed_extensions):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in allowed_extensions
 
 def remove_dir_files(directory):
     for file_name in os.listdir(directory):
         os.remove(os.path.join(directory, file_name))
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/image", methods=["GET", "POST"])
 def upload_file():
     if request.method == "GET":
         remove_dir_files("static")
         return render_template("upload.html")
     if request.method == "POST":
         file = request.files["file"]
-        if file and allowed_file(file.filename):
+        if file and allowed_file(file.filename, IMAGE_ALLOWED_EXTENSIONS):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             img = object_detector.run()
@@ -52,6 +52,6 @@ def upload_file():
             return render_template("failure.html", message=NOTAFICATION_MESSAGE)
 
 
-@app.route("/video_feed")
+@app.route("/video")
 def video_feed():
-    return Response(camera_object_detector.gen(), mimetype="multipart/x-mixed-replace; boundary=frame")
+    return Response(video_object_detector.gen(video="video2.mp4"), mimetype="multipart/x-mixed-replace; boundary=frame")
