@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 import object_detector
 import random
 import video_object_detector
+import requests
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 
@@ -23,6 +24,7 @@ app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 IMAGE_ALLOWED_EXTENSIONS = set(["jpg"])
+VIDEO_ALLOWED_EXTENSIONS = set(["mp4"])
 
 def allowed_file(filename, allowed_extensions):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in allowed_extensions
@@ -47,6 +49,10 @@ def upload_file():
             img.save("static/detected_image" + str(random_number) + ".jpg")
             remove_dir_files(app.config["UPLOAD_FOLDER"])
             return render_template("detected.html", location="static/detected_image" + str(random_number) + ".jpg")
+        elif file and allowed_file(file.filename, VIDEO_ALLOWED_EXTENSIONS):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+            return Response(video_object_detector.gen(video=("uploads/" + filename)), mimetype="multipart/x-mixed-replace; boundary=frame")
         else:
             NOTAFICATION_MESSAGE = "The only allowed file type so far is jpg. Please choose another photo."
             return render_template("failure.html", message=NOTAFICATION_MESSAGE)
