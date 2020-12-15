@@ -34,25 +34,28 @@ def remove_dir_files(directory):
         os.remove(os.path.join(directory, file_name))
 
 
-@app.route("/upload", methods=["GET", "POST"])
-def upload_file():
-    if request.method == "GET":
-        remove_dir_files("static")
-        remove_dir_files(app.config["UPLOAD_FOLDER"])
-        return render_template("upload.html")
-    if request.method == "POST":
-        file = request.files["file"]
-        if file and allowed_file(file.filename, IMAGE_ALLOWED_EXTENSIONS):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-            img = object_detector.run()
-            location = os.path.join("static", "detected_image.jpg")
-            img.save(location)
-            return render_template("detected.html", location=location)
-        elif file and allowed_file(file.filename, VIDEO_ALLOWED_EXTENSIONS):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-            return Response(video_object_detector.gen(video=("uploads/" + filename)), mimetype="multipart/x-mixed-replace; boundary=frame")
-        else:
-            NOTAFICATION_MESSAGE = "The only allowed file type is jpg for images and mp4 for videos. Please choose another file."                
-            return render_template("failure.html", message=NOTAFICATION_MESSAGE)
+@app.route("/upload", methods=["GET"])
+def upload_file():    
+    remove_dir_files("static")
+    remove_dir_files(app.config["UPLOAD_FOLDER"])
+    return render_template("upload.html")
+
+
+@app.route("/detected", methods=["POST"])
+def detected():
+    file = request.files["file"]
+    if file and allowed_file(file.filename, IMAGE_ALLOWED_EXTENSIONS):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+        img = object_detector.run()
+        num = random.randrange(1, 100)
+        location = os.path.join("static", "detected_image" + str(num) + ".jpg")
+        img.save(location)
+        return render_template("detected.html", location=location)
+    elif file and allowed_file(file.filename, VIDEO_ALLOWED_EXTENSIONS):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+        return Response(video_object_detector.gen(video=("uploads/" + filename)), mimetype="multipart/x-mixed-replace; boundary=frame")
+    else:
+        NOTAFICATION_MESSAGE = "The only allowed file type is jpg for images and mp4 for videos. Please choose another file."                
+        return render_template("failure.html", message=NOTAFICATION_MESSAGE)
