@@ -2,7 +2,7 @@
 OBJECT DETECTION WEB APPLICATION
 
 @author: HAYK STEPANYAN
-LAST EDIT: DECEMBER 10, 2020
+LAST EDIT: DECEMBER 15, 2020
 """
 
 import os
@@ -20,7 +20,7 @@ if not os.path.isdir(UPLOAD_FOLDER):
 
 app=Flask(__name__)
 app.secret_key = "secret key"
-app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
+app.config["MAX_CONTENT_LENGTH"] = None
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 IMAGE_ALLOWED_EXTENSIONS = set(["jpg"])
@@ -54,7 +54,7 @@ def upload_file():
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             return Response(video_object_detector.gen(video=("uploads/" + filename)), mimetype="multipart/x-mixed-replace; boundary=frame")
         else:
-            NOTAFICATION_MESSAGE = "The only allowed file type so far is jpg. Please choose another photo."
+            NOTAFICATION_MESSAGE = "The only allowed file type is jpg for images and mp4 for videos. Please choose another file."                
             return render_template("failure.html", message=NOTAFICATION_MESSAGE)
 
 
