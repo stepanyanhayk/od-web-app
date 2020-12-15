@@ -34,7 +34,7 @@ def remove_dir_files(directory):
         os.remove(os.path.join(directory, file_name))
 
 
-@app.route("/image", methods=["GET", "POST"])
+@app.route("/upload", methods=["GET", "POST"])
 def upload_file():
     if request.method == "GET":
         remove_dir_files("static")
@@ -56,8 +56,3 @@ def upload_file():
         else:
             NOTAFICATION_MESSAGE = "The only allowed file type is jpg for images and mp4 for videos. Please choose another file."                
             return render_template("failure.html", message=NOTAFICATION_MESSAGE)
-
-
-@app.route("/video")
-def video_feed():
-    return Response(video_object_detector.gen(video="video2.mp4"), mimetype="multipart/x-mixed-replace; boundary=frame")
