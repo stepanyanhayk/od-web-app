@@ -5,13 +5,13 @@ OBJECT DETECTION WEB APPLICATION
 LAST EDIT: DECEMBER 15, 2020
 """
 
-import os
 from flask import Flask, flash, request, redirect, render_template, Response
 from werkzeug.utils import secure_filename
 import object_detector
 import random
 import video_object_detector
 import requests
+import os
 
 UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
 
@@ -38,6 +38,7 @@ def remove_dir_files(directory):
 def upload_file():
     if request.method == "GET":
         remove_dir_files("static")
+        remove_dir_files(app.config["UPLOAD_FOLDER"])
         return render_template("upload.html")
     if request.method == "POST":
         file = request.files["file"]
@@ -45,10 +46,9 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             img = object_detector.run()
-            random_number = random.randint(1, 100)
-            img.save("static/detected_image" + str(random_number) + ".jpg")
-            remove_dir_files(app.config["UPLOAD_FOLDER"])
-            return render_template("detected.html", location="static/detected_image" + str(random_number) + ".jpg")
+            location = os.path.join("static", "detected_image.jpg")
+            img.save(location)
+            return render_template("detected.html", location=location)
         elif file and allowed_file(file.filename, VIDEO_ALLOWED_EXTENSIONS):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
