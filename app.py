@@ -44,16 +44,15 @@ def upload_file():
 @app.route("/detected", methods=["POST"])
 def detected():
     file = request.files["file"]
-    if file and allowed_file(file.filename, IMAGE_ALLOWED_EXTENSIONS):
-        filename = secure_filename(file.filename)
+    filename = secure_filename(file.filename)
+    if allowed_file(file.filename, IMAGE_ALLOWED_EXTENSIONS):
         file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
         img = object_detector.run()
         num = random.randrange(1, 100)
         location = os.path.join("static", "detected_image" + str(num) + ".jpg")
         img.save(location)
         return render_template("detected.html", location=location)
-    elif file and allowed_file(file.filename, VIDEO_ALLOWED_EXTENSIONS):
-        filename = secure_filename(file.filename)
+    elif allowed_file(file.filename, VIDEO_ALLOWED_EXTENSIONS):
         file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
         return Response(video_object_detector.gen(video=("uploads/" + filename)), mimetype="multipart/x-mixed-replace; boundary=frame")
     else:
