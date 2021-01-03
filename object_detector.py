@@ -51,7 +51,7 @@ def run_inference_for_single_image(model, image):
 	return output_dict
 
 def show_inference(model, image_path, count):
-	PATH_TO_LABELS = 'object_detection/mscoco_label_map.pbtxt' # list of classes to classify
+	PATH_TO_LABELS = 'object_detection/data/mscoco_label_map.pbtxt' # list of classes to classify
 	category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
 	image_np = np.array(Image.open(image_path))
 	output_dict = run_inference_for_single_image(model, image_np)

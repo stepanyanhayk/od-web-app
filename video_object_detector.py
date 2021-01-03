@@ -18,7 +18,7 @@ from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
 PATH_TO_CKPT = "saved_models/ssd_mobilenet_v1_coco_2017_11_17/video/frozen_inference_graph.pb"
-PATH_TO_LABELS = os.path.join("object_detection", "mscoco_label_map.pbtxt")
+PATH_TO_LABELS = "object_detection/data/mscoco_label_map.pbtxt"
 NUM_CLASSES = 90
 
 detection_graph = tf.Graph()
