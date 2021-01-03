@@ -63,7 +63,7 @@ def show_inference(model, image_path, count):
 		category_index,
 		instance_masks=output_dict.get('detection_masks_reframed', None),
 		use_normalized_coordinates=True,
-		line_thickness=8)
+		line_thickness=15)
 	img = Image.fromarray(image_np)
 	return img
 

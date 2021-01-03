@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Failure</title>
-    </head>
-    <body>
+{% extends "layout.html" %}
+
+{% block title %} <title>Failure!</title> {% endblock %}
+
+{% block body %}
+
         <h1>{{ message }}</h1>
         <p><a href="/upload">Upload again</a></p>
-    </body>
-</html>
+
+{% endblock %}
