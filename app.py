@@ -2,7 +2,7 @@
 OBJECT DETECTION WEB APPLICATION
 
 @author: HAYK STEPANYAN
-LAST EDIT: JANUARY 3, 2021
+LAST EDIT: JANUARY 8, 2021
 """
 
 from flask import Flask, flash, request, redirect, render_template, Response
