@@ -33,6 +33,9 @@ def remove_dir_files(directory):
     for file_name in os.listdir(directory):
         os.remove(os.path.join(directory, file_name))
 
+@app.route("/")
+def index():
+    return redirect("/upload")
 
 @app.route("/upload", methods=["GET"])
 def upload_file():    
