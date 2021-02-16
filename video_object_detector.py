@@ -56,4 +56,3 @@ def gen(video):
                 vis_util.visualize_boxes_and_labels_on_image_array(image_np, np.squeeze(boxes), np.squeeze(classes).astype(np.int32), np.squeeze(scores), category_index, use_normalized_coordinates=True, line_thickness=8)
                 frame = cv2.imencode(".jpg", image_np)[1].tobytes()
                 yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-                time.sleep(0.1)
